@@ -1,4 +1,3 @@
-#!/bin/bash
 
 
 _audioPreprocess() {
@@ -73,47 +72,11 @@ _audioPreprocess() {
 	echo -e '\E[1;32;46m'""$processingChain""'\E[0m'
 	echo ''
 	
-	sox --multi-threaded --buffer 131072 "$1" -C 8 "$1"-"$reverbType"-256kb.ogg $processingChain
-	rm "$1"
+	sox --multi-threaded --buffer 131072 "$2" -C 8 "$2"-"$reverbType"-256kb.ogg $processingChain
+	rm "$2"
 }
 
 _audioPreprocessor() {
-	find . -type f -regextype posix-extended -regex '.*\.ogg|.*\.mp3|.*\.flac|.*\.wav|.*\.m4a|.*\.wma|.*\.wv|.*\.swa|.*\.aac|.*\.ac3' -print0 | xargs -0 -n 1 -P 4 "$scriptAbsoluteLocation" _audioPreprocessor
+	find . -type f -regextype posix-extended -regex '.*\.ogg|.*\.mp3|.*\.flac|.*\.wav|.*\.m4a|.*\.wma|.*\.wv|.*\.swa|.*\.aac|.*\.ac3' -print0 | xargs -0 -n 1 -P 6 "$scriptAbsoluteLocation" _audioPreprocess "$1"
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
