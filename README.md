@@ -4,6 +4,9 @@ See license.txt for audioManager license conditions.
 
 # Usage
 
+audioman _m3uGenerator
+
+audioman _audioPreprocessor
 
 # Design
 

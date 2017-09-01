@@ -575,6 +575,10 @@ _test() {
 	
 	_checkDep rm
 	
+	_checkDep xargs
+	
+	_checkDep sox
+	
 	_tryExec "_idleTest"
 	
 	[[ -e /dev/urandom ]] || echo /dev/urandom missing _stop
@@ -609,7 +613,7 @@ _setupCommand() {
 
 _setupCommands() {
 	#find . -name '_command' -exec "$scriptAbsoluteLocation" _setupCommand {} \;
-	true
+	ln -s "$scriptAbsoluteLocation" ~/bin/audioman
 }
 
 _setup() {
