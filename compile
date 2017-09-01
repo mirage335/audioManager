@@ -148,6 +148,8 @@ _includeScript core.sh
 
 _includeScript m3ugen.sh
 
+_includeScript audioPreprocessor.sh
+
 _includeScript program.sh "structure"
 
 _includeScript overrides.sh "structure"
