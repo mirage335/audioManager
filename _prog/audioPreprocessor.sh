@@ -18,26 +18,27 @@ _audioPreprocess() {
 	case "$reverbType" in
 	ClearReverb)
 		processingChain="$processingChain ladspa tap_reverb 1900 -2 -14 1 1 1 1 26"
-		echo -e '\E[1;32;46m'" $reverbType "'\E[0m'
+		#echo -e '\E[1;32;46m'" $reverbType "'\E[0m'
 		;;
 	AfterBurnLongReverb)
 		processingChain="$processingChain ladspa tap_reverb 4800 -4 -10 1 1 1 1 1"
-		echo -e '\E[1;32;46m'" $reverbType "'\E[0m'
+		#echo -e '\E[1;32;46m'" $reverbType "'\E[0m'
 		;;
 	AmbienceThickHDReverb)
 		processingChain="$processingChain ladspa tap_reverb 1200 -11 -14 1 1 1 1 4"
-		echo -e '\E[1;32;46m'" $reverbType "'\E[0m'
+		#echo -e '\E[1;32;46m'" $reverbType "'\E[0m'
 		;;
 	AmbienceReverb)
 		processingChain="$processingChain ladspa tap_reverb 1100 -8 -11 1 1 1 1 2"
-		echo -e '\E[1;32;46m'" $reverbType "'\E[0m'
+		#echo -e '\E[1;32;46m'" $reverbType "'\E[0m'
 		;;
 	SmallRoomReverb)
 		processingChain="$processingChain ladspa tap_reverb 1900 -6 -9 1 1 1 1 26"
-		echo -e '\E[1;32;46m'" $reverbType "'\E[0m'
+		#echo -e '\E[1;32;46m'" $reverbType "'\E[0m'
 		;;
 	NullReverb)
-		echo -e '\E[1;32;46m'" $reverbType "'\E[0m'
+		true
+		#echo -e '\E[1;32;46m'" $reverbType "'\E[0m'
 		;;
 	*)
 		echo -e '\E[1;33;41m No reverbType found, first parameter: [ClearReverb|AfterBurnLongReverb|AmbienceThickHDReverb|AmbienceReverb|SmallRoomReverb|NullReverb] \E[0m'
@@ -68,15 +69,17 @@ _audioPreprocess() {
 	#Subtle effect, TubeWarmpth. Seems to slightly ease harmonic distortion. Disabled for apparently undesirable artifacts in some situations.
 	processingChain="$processingChain ladspa -r tap_tubewarmth 2.5 10"
 
-	echo ''
-	echo -e '\E[1;32;46m'""$processingChain""'\E[0m'
-	echo ''
+	#echo ''
+	#echo -e '\E[1;32;46m'""$processingChain""'\E[0m'
+	#echo ''
 	
 	sox --multi-threaded --buffer 131072 "$2" -C 8 "$2"-"$reverbType"-256kb.ogg $processingChain
 	rm "$2"
+	
+	echo -e '\E[1;32;46m'""*""'\E[0m'
 }
 
 _audioPreprocessor() {
-	find . -type f -regextype posix-extended -regex '.*\.ogg|.*\.mp3|.*\.flac|.*\.wav|.*\.m4a|.*\.wma|.*\.wv|.*\.swa|.*\.aac|.*\.ac3' -print0 | xargs -0 -n 1 -P 6 "$scriptAbsoluteLocation" _audioPreprocess "$1"
+	find . -type f \( -iname '*.ogg' -o -iname '*.mp3' -o -iname '*.flac' -o -iname '*.wav' -o -iname '*.m4a' -o -iname '*.wma' -o -iname '*.wv' -o -iname '*.swa' -o -iname '*.aac' -o -iname '*.ac3' \) -print0 | xargs -0 -n 1 -P 6 "$scriptAbsoluteLocation" _audioPreprocess "$1"
 }
 
