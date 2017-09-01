@@ -2,6 +2,10 @@ Copyright (C) 2017 mirage335
 See the end of the file for license conditions.
 See license.txt for audioManager license conditions.
 
+Audio preprocessing and playlist management scripts.
+
+Preprocesses audio files for frequency response correction, reverberation, and other LADSPA effects. Generates M3U files to translate filesystem relationships into playlists suitable for typical audio applications. 
+
 # Usage
 
 audioman _m3uGenerator
