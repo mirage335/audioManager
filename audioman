@@ -657,14 +657,17 @@ _writePlaylist() {
 	m3uName="${m3uName//\//-}"
 	m3uName="${m3uName//\./-}"
 	
-	"$scriptAbsoluteLocation" _listTracks "$1" "$1"/"$m3uName".m3u
+	"$scriptAbsoluteLocation" _listTracks "$2" "$1"/"$m3uName".m3u
 }
 
 _m3uGenerator() {
+	export workDir="$PWD"
+	[[ "$1" != "" ]] && export workDir="$1"
+	
 	export albumRealPath=$(_getAbsoluteLocation "$PWD")
 	export albumName=$(basename "$albumRealPath")
 	
-	find . -type d -exec "$scriptAbsoluteLocation" _writePlaylist {} "$albumRealPath" "$albumName" \;
+	find "$workDir" -type d -exec "$scriptAbsoluteLocation" _writePlaylist {} "$workDir" "$albumName" \;
 	
 }
 
