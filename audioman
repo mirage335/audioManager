@@ -638,12 +638,12 @@ _setup() {
 _listTracks() {
 	cd "$1"
 	
-	local $searchDir
-	local $absoluteSearchDir
+	local searchDir
+	local absoluteSearchDir
 	
 	absoluteSearchDir=$(_getAbsoluteLocation "$1")
 	searchDir="$absoluteSearchDir"
-	[[ "$1" == "$absoluteSearchDir" ]] && searchDir="$1"
+	[[ "$1" != "$absoluteSearchDir" ]] && searchDir="."
 	
 	find "$searchDir" -type f \( -iname '*.ogg' -o -iname '*.mp3' -o -iname '*.flac' -o -iname '*.wav' -o -iname '*.m4a' -o -iname '*.wma' -o -iname '*.wv' -o -iname '*.swa' -o -iname '*.aac' -o -iname '*.ac3' \) | sort > "$2"
 	cd "$scriptAbsoluteFolder"
