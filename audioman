@@ -638,8 +638,8 @@ _setup() {
 _listTracks() {
 	cd "$1"
 	
-	local "$searchDir"
-	local "$absoluteSearchDir"
+	local $searchDir
+	local $absoluteSearchDir
 	
 	absoluteSearchDir=$(_getAbsoluteLocation "$1")
 	searchDir="$absoluteSearchDir"
