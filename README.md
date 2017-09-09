@@ -12,6 +12,10 @@ audioman _m3uGenerator
 
 audioman _audioPreprocessor
 
+audioman _setupPulse
+
+audioman _resetPulse
+
 # Design
 
 

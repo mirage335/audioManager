@@ -124,6 +124,24 @@ _setupCommands() {
 	ln -s "$scriptAbsoluteLocation" ~/bin/audioman
 }
 
+_setupPulse() {
+	[[ ! -e /etc/pulse/default.pa ]] && return 1
+	
+	mkdir -p "$HOME"/.pulse
+	[[ -e "$HOME"/.pulse/default.pa ]] && mv "$HOME"/.pulse/default.pa "$HOME"/.pulse/default.pa.bak
+	
+	cat /etc/pulse/default.pa > "$HOME"/.pulse/default.pa
+	
+	cat "$scriptAbsoluteFolder"/pulse >> "$HOME"/.pulse/default.pa
+	
+	hardwareDefaultOutputSink=$(pacmd list-sinks | grep 'name:' | head -n1 | cut -f2 -d '<' | cut -f1 -d '>')
+	
+	sed -i 's/'"hardwareDefaultOutputSink"'/'"$hardwareDefaultOutputSink"'/g' "$HOME"/.pulse/default.pa
+	
+	"$scriptAbsoluteLocation" _resetPulse
+	
+}
+
 _setup() {
 	_start
 	

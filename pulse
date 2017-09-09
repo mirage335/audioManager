@@ -1,0 +1,102 @@
+
+####################
+#Processing Sink
+####################
+
+load-module module-null-sink sink_name=processed
+update-sink-proplist processed device.description=processed
+
+#load-module module-ladspa-sink sink_name=finalTube sink_properties=device.description=finalTube master=processed plugin=tap_tubewarmth label=tap_tubewarmth control=2.5,10
+
+####################
+#Signal Processing
+####################
+
+load-module module-ladspa-sink sink_name=finalTube sink_properties=device.description=finalTube master=hardwareDefaultOutputSink plugin=tap_tubewarmth label=tap_tubewarmth control=2.5,10
+
+
+load-module module-ladspa-sink sink_name=freq7 sink_properties=device.description=freq7 master=finalTube plugin=single_para_1203 label=singlePara control=-2,5500,0.35
+
+load-module module-ladspa-sink sink_name=freq6 sink_properties=device.description=freq6 master=freq7 plugin=single_para_1203 label=singlePara control=1,25,2
+load-module module-ladspa-sink sink_name=freq5 sink_properties=device.description=freq5 master=freq6 plugin=single_para_1203 label=singlePara control=-6,8750,0.2
+load-module module-ladspa-sink sink_name=freq4 sink_properties=device.description=freq4 master=freq5 plugin=single_para_1203 label=singlePara control=-8,13450,0.2
+
+load-module module-ladspa-sink sink_name=freq3 sink_properties=device.description=freq3 master=freq4 plugin=single_para_1203 label=singlePara control=-6,5900,0.25
+load-module module-ladspa-sink sink_name=freq2 sink_properties=device.description=freq2 master=freq3 plugin=single_para_1203 label=singlePara control=-2,8500,0.2
+
+load-module module-ladspa-sink sink_name=freq1 sink_properties=device.description=freq1 master=freq2 plugin=single_para_1203 label=singlePara control=3,17000,2
+
+load-module module-ladspa-sink sink_name=freq0 sink_properties=device.description=freq0 master=freq2 plugin=single_para_1203 label=singlePara control=4,16000,4
+
+
+
+
+
+load-module module-ladspa-sink sink_name=tubeWarmth sink_properties=device.description=tubeWarmth master=freq0 plugin=tap_tubewarmth label=tap_tubewarmth control=2.5,10
+
+
+
+
+
+load-module module-ladspa-sink sink_name=bs2b sink_properties=device.description=bs2b master=freq0 plugin=bs2b label=bs2b control=650,9.5
+
+
+
+
+
+load-module module-ladspa-sink sink_name=nullReverb sink_properties=device.description=nullReverb master=bs2b plugin=amp_1181 label=amp control=-2
+
+load-module module-ladspa-sink sink_name=afterBurnLongReverb sink_properties=device.description=afterBurnLongReverb master=bs2b plugin=tap_reverb label=tap_reverb control=4800,-4,-10,1,1,1,1,1
+
+load-module module-ladspa-sink sink_name=ambienceThickHDReverb sink_properties=device.description=ambienceThickHDReverb master=bs2b plugin=tap_reverb label=tap_reverb control=1200,-11,-14,1,1,1,1,4
+
+load-module module-ladspa-sink sink_name=ambienceReverb sink_properties=device.description=ambienceReverb master=bs2b plugin=tap_reverb label=tap_reverb control=1100,-8,-11,1,1,1,1,2
+
+load-module module-ladspa-sink sink_name=smallRoomReverb sink_properties=device.description=smallRoomReverb master=bs2b plugin=tap_reverb label=tap_reverb control=1900,-6,-9,1,1,1,1,26
+
+load-module module-ladspa-sink sink_name=clearReverb sink_properties=device.description=clearReverb master=bs2b plugin=tap_reverb label=tap_reverb control=1900,-2,-14,1,1,1,1,26
+
+
+set-default-sink clearReverb
+
+
+
+####################
+#Processed Loopback
+####################loopback
+
+#load-module module-null-sink sink_name=master
+#update-sink-proplist master device.description=master
+
+#load-module module-loopback latency_msec=1 source=processed.monitor sink=master
+
+#load-module module-loopback latency_msec=1 source=master.monitor sink=hardwareDefaultOutputSink
+
+#load-module module-loopback latency_msec=1 source=processed.monitor sink=hardwareDefaultOutputSink
+
+
+####################
+#Mic Loopback (DSP)
+####################loopback
+
+#load-module module-loopback latency_msec=1 sink=clearReverb
+
+####################
+#Bluetooth
+####################
+#load-module module-alsa-sink device=plug:bluetooth
+
+#load-module module-ladspa-sink sink_name=freq7 sink_properties=device.description=freq7 master=alsa_output.plug_bluetooth plugin=single_para_1203 label=singlePara control=-3,11250,0.65
+
+
+####################
+#RTP
+####################
+#load-module module-null-sink sink_name=rtp
+#load-module module-rtp-send source=processed.monitor destination=127.0.0.1 port=46998 loop=1
+
+####################
+#UPnP
+####################
+#load-module module-http-protocol-tcp
+
