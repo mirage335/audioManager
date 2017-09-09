@@ -3,7 +3,17 @@
 #$1 == search directory
 #$2 == output filename
 _listTracks() {
-	find "$1" -type f \( -iname '*.ogg' -o -iname '*.mp3' -o -iname '*.flac' -o -iname '*.wav' -o -iname '*.m4a' -o -iname '*.wma' -o -iname '*.wv' -o -iname '*.swa' -o -iname '*.aac' -o -iname '*.ac3' \) | sort > "$2"
+	cd "$1"
+	
+	local searchDir
+	
+	searchDir="$1"
+	
+	#https://stackoverflow.com/questions/20204820/check-if-shell-script-1-is-absolute-or-relative-path
+	! [[ "${searchDir:0:1}" == '/' ]] && searchDir="."
+	
+	find "$searchDir" -type f \( -iname '*.ogg' -o -iname '*.mp3' -o -iname '*.flac' -o -iname '*.wav' -o -iname '*.m4a' -o -iname '*.wma' -o -iname '*.wv' -o -iname '*.swa' -o -iname '*.aac' -o -iname '*.ac3' \) | sort > "$2"
+	cd "$scriptAbsoluteFolder"
 }
 
 
@@ -24,14 +34,14 @@ _writePlaylist() {
 	m3uName="${m3uName//\//-}"
 	m3uName="${m3uName//\./-}"
 	
-	"$scriptAbsoluteLocation" _listTracks "$2" "$1"/"$m3uName".m3u
+	"$scriptAbsoluteLocation" _listTracks "$1" "$m3uName".m3u
 }
 
 _m3uGenerator() {
 	export workDir="$PWD"
 	[[ "$1" != "" ]] && export workDir="$1"
 	
-	export albumRealPath=$(_getAbsoluteLocation "$PWD")
+	export albumRealPath=$(_getAbsoluteLocation "$workDir")
 	export albumName=$(basename "$albumRealPath")
 	
 	find "$workDir" -type d -exec "$scriptAbsoluteLocation" _writePlaylist {} "$workDir" "$albumName" \;
